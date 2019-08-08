@@ -32,28 +32,20 @@ function handleAsync (err, data) {
   console.log("success")
 }
 
-var noDatify = function (done) {
-  app.get("/api/timestamp/", function (req, res) {
-    var date = new Date()
+app.get("/api/timestamp/", function (req, res) {
+  var date = new Date()
+  res.json({unix: date.getTime(), utc: date.toUTCString()});
+});
+
+app.get("/api/timestamp/:date_string", function (req, res) {
+  var dateString = req.params.date_string
+  if (isNaN(Date.parse(dateString))) {
+    res.json({error: "Invalid Date"});
+  } else {
+    var date = new Date(dateString)
     res.json({unix: date.getTime(), utc: date.toUTCString()});
-  });
-}
-
-var datify = function (done) {
-  app.get("/api/timestamp/:date_string", function (req, res) {
-    var dateString = req.params.date_string
-    if (isNaN(Date.parse(dateString))) {
-      res.json({error: "Invalid Date"});
-    } else {
-      var date = new Date(dateString)
-      res.json({unix: date.getTime(), utc: date.toUTCString()});
-    }
-  });
-}
-
-noDatify(handleAsync)
-datify(handleAsync)
-
+  }
+});
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
