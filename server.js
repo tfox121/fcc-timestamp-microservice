@@ -27,11 +27,6 @@ app.get("/api/hello", function (req, res) {
 
 // challenge code here:
 
-function handleAsync (err, data) {
-  if (err) throw err
-  console.log("success")
-}
-
 app.get("/api/timestamp/", function (req, res) {
   var date = new Date()
   res.json({unix: date.getTime(), utc: date.toUTCString()});
